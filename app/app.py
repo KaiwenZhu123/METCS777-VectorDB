@@ -29,11 +29,10 @@ if prompt := st.chat_input("Enter question here?"):
     # Display user message in chat message container
     with st.chat_message("user"):
         st.markdown(prompt)
-    print(st.session_state.messages)
-    
+
     # Display assistant response in chat message container
     with st.chat_message("assistant"):
         stream = controller.run(query=prompt, search_kwargs={"filter": {"topic":topic}})
         response = st.write(stream)
     
-    st.session_state.messages.append({"role": "assistant", "content": response})
+    st.session_state.messages.append({"role": "assistant", "content": stream})
