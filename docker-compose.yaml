@@ -28,7 +28,7 @@ services:
     image: rag-framework-app:latest
     environment:
       OPENAI_API_KEY:
-      WEAVIATE_URL: "http://localhost:8080"
+      WEAVIATE_URL: "http://weaviate:8080"
     build:
       context: .
       dockerfile: Dockerfile
