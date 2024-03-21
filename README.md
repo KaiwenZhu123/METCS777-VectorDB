@@ -44,3 +44,7 @@ Prepare your environments and software
    streamlit run ./app/app.py --server.runOnSave=True --browser.serverAddress=localhost
    ```
 #### Option 2: Run docker compose
+In the root of this project, run
+```bash
+docker compose -f docker-compose.yaml up
+```
