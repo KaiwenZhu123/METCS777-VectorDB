@@ -17,7 +17,7 @@ from langchain_community.vectorstores import Weaviate
 from langchain_openai import ChatOpenAI
 from langchain.agents import AgentExecutor, create_openai_tools_agent
 from langchain.tools.retriever import create_retriever_tool
-from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
+from langchain.prompts import PromptTemplate, ChatPromptTemplate, MessagesPlaceholder
 from weaviate import Client
 
 LLM = "gpt-3.5-turbo-1106"
@@ -27,12 +27,19 @@ PROMPT = ChatPromptTemplate.from_messages(
         ("system", f"You are a helpful Question answering agent that help users answer question about the game Genshin Inpact based on context document retrieved using the InformationRetrieval tool below"\
         f"or previous chat history with the human. You must provide an answer to the human input based on retrieved context. If you cannot answer the question based on retrieved context, "\
         f"tell the human you cannot answer the question, do not try to make up an answer. Tell the human the reason you cannot answer their question to help them rephrase the question.\n"\
+        f"Add to References below all page_content you retrieved from tool"\
         f"Return the answer to user with the following format:\n"\
-        f"Final answers:\n"),
+        f"Final answers:\n\n"\
+        f"References:\n"),
         MessagesPlaceholder("chat_history", optional=True),
         ("human", "{input}"),
         MessagesPlaceholder("agent_scratchpad"),
     ]
+)
+DOC_PROMPT = PromptTemplate.from_template(
+"""
+page_content: {page_content}
+"""
 )
 class RAGController:
     def __init__(self):
@@ -61,10 +68,13 @@ class RAGController:
             create_retriever_tool(retriever,
                              name="InformationRetrieval",
                              description="A tool helpful for retriever relevant context document for user query",
+                             document_prompt=DOC_PROMPT,
+                             document_separator="\n\n\n"
             )
         ]
         agent = create_openai_tools_agent(self.llm, tools, PROMPT)
         return AgentExecutor.from_agent_and_tools(agent=agent, tools=tools,
+                                                  return_intermediate_steps=True,
                                                   verbose=True, return_source_documents=True)
 
 
