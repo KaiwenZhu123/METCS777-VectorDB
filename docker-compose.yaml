@@ -25,12 +25,14 @@ services:
       CLUSTER_HOSTNAME: 'node1'
   backend:
     container_name: rag_app
-    image: rag-framework-app
+    image: rag-framework-app:latest
     environment:
       OPENAI_API_KEY:
-      WEAVIATE_URL: "http://localhost:8000"
+      WEAVIATE_URL: "http://localhost:8080"
     build:
       context: .
       dockerfile: Dockerfile
+      links:
+        - weaviate:database
     ports:
-      8501:8501
+      - 8501:8501
