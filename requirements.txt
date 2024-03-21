@@ -3,3 +3,11 @@ langchain-openai
 langchain-community
 streamlit
 weaviate-client
+fastembed
+# Unstructured for parsing
+pdf2image
+pdfminer.six
+pillow-heif
+pikepdf
+pypdf
+unstructured
