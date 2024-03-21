@@ -32,7 +32,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      links:
-        - weaviate:database
     ports:
       - 8501:8501
+    depends_on:
+      - weaviate
